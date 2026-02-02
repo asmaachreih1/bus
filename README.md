@@ -5,7 +5,7 @@ A real-time, high-fidelity bus tracking solution designed for training groups in
 ## The "Why"
 Coordinating bus pickups for training sessions can be stressful. Students often wait outside for long periods without knowing exactly where the driver is. 
 
-**Van Tracker** solves this by:
+**Bus Tracker** solves this by:
 - Providing **live GPS tracking** of the van.
 - Offering **individual ETAs** for every waiting member.
 - Automating **arrival detection** (members are automatically checked in when the bus is 1 min away).
