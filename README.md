@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚌 Van Tracker: Premium Live Training Logistics
 
-## Getting Started
+A real-time, high-fidelity bus tracking solution designed for training groups in Lebanon (Beirut & South Lebanon). This project was born from a simple need: **coordinating student pickups safely and efficiently.**
 
-First, run the development server:
+## 🌟 The "Why"
+Coordinating bus pickups for training sessions can be stressful. Students often wait outside for long periods without knowing exactly where the driver is. 
 
+**Van Tracker** solves this by:
+- Providing **live GPS tracking** of the van.
+- Offering **individual ETAs** for every waiting member.
+- Automating **arrival detection** (members are automatically checked in when the bus is 1 min away).
+- Ensuring a **premium, responsive experience** that works perfectly on mobile while standing at a pickup point.
+
+---
+
+## 🚀 Features
+- **Live Map**: Custom-styled Google Maps restricted to Beirut/South Lebanon.
+- **Dynamic Presence**: Each student joins with their name and appears as a person icon.
+- **Smart ETA**: Uses Google Distance Matrix API for precise driving times.
+- **Auto-Cleanup**: Arrived students are intelligently removed from the waiting list.
+- **Glassmorphic UI**: A modern, dark-themed aesthetic with mesh gradients and micro-animations.
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend**: Next.js 16 (App Router), Tailwind CSS 4.
+- **Backend**: Node.js, Express (Real-time in-memory state).
+- **APIs**: Google Maps JavaScript API, Google Directions API, Google Distance Matrix.
+
+---
+
+## 💻 Local Setup
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/asmaachreih1/bus.git
+cd bus
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+Install both frontend and backend dependencies:
+```bash
+# Frontend
+npm install
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Backend
+cd server
+npm install
+cd ..
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Environment Variables
+Create a `.env.local` in the root:
+```env
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
-## Learn More
+### 4. Run the project
+Open two terminals:
 
-To learn more about Next.js, take a look at the following resources:
+**Terminal 1 (Backend):**
+```bash
+cd server
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Terminal 2 (Frontend):**
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🌎 Deployment Guide
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Backend (Render/Heroku/Railway)
+The server in the `/server` folder is ready for production. 
+1. Connect this repo to **Render.com**.
+2. Set the "Base Directory" to `server`.
+3. Start Command: `npm start`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Frontend (Vercel)
+1. Connect this repo to **Vercel**.
+2. Add the following Environment Variables:
+   - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Your API Key.
+   - `NEXT_PUBLIC_API_URL`: The URL of your deployed backend.
+
+---
+
+## ✨ Developed by Asmaa Shreih
+*Making training logistics smoother, one pickup at a time.*

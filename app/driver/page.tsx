@@ -28,7 +28,8 @@ export default function DriverPage() {
         setStatus('Sending live location');
 
         try {
-          await fetch('http://localhost:3001/api/update-location', {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+          await fetch(`${apiUrl}/api/update-location`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

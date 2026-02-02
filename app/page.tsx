@@ -77,7 +77,8 @@ export default function Home() {
 
     const initMap = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/vans');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${apiUrl}/api/vans`);
         const data = await res.json();
         const vans = data.vans || [];
 
@@ -135,8 +136,10 @@ export default function Home() {
       if (!studentPos) return;
 
       try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
         // Send my location
-        await fetch('http://localhost:3001/api/update-member', {
+        await fetch(`${apiUrl}/api/update-member`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -148,7 +151,7 @@ export default function Home() {
         });
 
         // Get everyone
-        const res = await fetch('http://localhost:3001/api/vans');
+        const res = await fetch(`${apiUrl}/api/vans`);
         const data = await res.json();
 
         const vans = data.vans || [];
@@ -204,7 +207,7 @@ export default function Home() {
                       // MARK AS ARRIVED if within 60 seconds
                       if (seconds <= 60) {
                         arrivalPromises.push(
-                          fetch('http://localhost:3001/api/mark-arrived', {
+                          fetch(`${apiUrl}/api/mark-arrived`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ id: member.id })
