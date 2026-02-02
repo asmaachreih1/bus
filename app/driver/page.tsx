@@ -19,7 +19,6 @@ export default function DriverPage() {
       return;
     }
 
-    // 🛰️ Start watching location
     watchIdRef.current = navigator.geolocation.watchPosition(
       async (position) => {
         const lat = position.coords.latitude;
@@ -29,26 +28,22 @@ export default function DriverPage() {
         setStatus('Sending live location');
 
         try {
-          await fetch('http://localhost:8000/index.php?r=api/update-location', {
+          await fetch('http://localhost:3001/api/update-location', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/json',
             },
-            body: `van_id=1&lat=${lat}&lng=${lng}`,
+            body: JSON.stringify({ van_id: 1, lat, lng }),
           });
         } catch {
           setStatus('Failed to send location');
         }
       },
       (error) => {
-        setStatus('Location permission denied');
         console.error(error);
+        setStatus('Location permission denied');
       },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 10000,
-      }
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
 
     return () => {
@@ -60,12 +55,7 @@ export default function DriverPage() {
 
   const startTrip = () => {
     setTripStarted(true);
-    setStatus('Starting trip...');
-    
-    // ⏩ Redirect to main map after 2 seconds
-    setTimeout(() => {
-      router.push('/');
-    }, 2000);
+    setStatus('Trip started');
   };
 
   const stopTrip = () => {
@@ -77,44 +67,72 @@ export default function DriverPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-900 text-white px-6">
-      <h1 className="text-3xl font-bold mb-6">🚌 Driver Mode</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-slate-900 px-6 font-[family-name:var(--font-geist-sans)] mesh-gradient relative">
+      <div className="absolute inset-0 bus-pattern opacity-30 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 animate-gradient-x z-10" />
 
-      <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md shadow">
-        <p className="text-sm text-slate-400 mb-2">Status</p>
-        <p className="text-lg font-semibold mb-4">{status}</p>
+      <div className="w-full max-w-md relative z-10">
+        <div className="flex items-center gap-4 mb-10 justify-center">
+          <div className="p-4 bg-white rounded-[2rem] shadow-2xl shadow-slate-200 border border-slate-100 flex items-center justify-center">
+            <span className="text-3xl">🚌</span>
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl font-black tracking-tight text-slate-900 leading-none mb-1">Bus Console</h1>
+            <p className="text-xs text-amber-600 font-bold uppercase tracking-widest">Training Session</p>
+          </div>
+        </div>
 
-        {coords && (
-          <>
-            <p className="text-sm text-slate-400">Current Location</p>
-            <p className="text-sm mt-1">
-              Lat: {coords.lat.toFixed(6)}
-              <br />
-              Lng: {coords.lng.toFixed(6)}
-            </p>
-          </>
-        )}
+        <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-2xl shadow-slate-200/60 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8">
+            <div className={`w-3 h-3 rounded-full ${tripStarted ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)] animate-pulse' : 'bg-slate-200'}`} />
+          </div>
 
-        {!tripStarted ? (
-          <button
-            onClick={startTrip}
-            className="mt-6 w-full bg-emerald-500 hover:bg-emerald-600 text-black font-semibold py-3 rounded-xl transition"
-          >
-            ▶ Start Trip
-          </button>
-        ) : (
-          <button
-            onClick={stopTrip}
-            className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition"
-          >
-            ⏹ Stop Trip
-          </button>
-        )}
+          <div className="mb-10 text-center">
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Operation Status</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{status}</p>
+          </div>
+
+          {coords && (
+            <div className="grid grid-cols-2 gap-6 mb-10 py-6 border-y border-slate-50">
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Latitude</p>
+                <p className="text-sm font-mono font-bold text-slate-600">{coords.lat.toFixed(6)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Longitude</p>
+                <p className="text-sm font-mono font-bold text-slate-600">{coords.lng.toFixed(6)}</p>
+              </div>
+            </div>
+          )}
+
+          {!tripStarted ? (
+            <button
+              onClick={startTrip}
+              className="group relative w-full bg-slate-900 hover:bg-black text-white font-black py-6 rounded-[2rem] transition-all duration-300 transform active:scale-[0.97] shadow-2xl shadow-slate-900/20 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <span className="relative flex items-center justify-center gap-3 text-lg tracking-tight">
+                START SESSION
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={stopTrip}
+              className="w-full bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 font-bold py-6 rounded-[2rem] transition-all duration-300 border border-slate-100 active:scale-[0.97]"
+            >
+              <span className="flex items-center justify-center gap-3 text-lg tracking-tight">
+                END SESSION
+              </span>
+            </button>
+          )}
+        </div>
+
+        <div className="mt-10 text-center px-10">
+          <p className="text-[11px] text-slate-400 font-medium leading-relaxed italic">
+            Keep this active so your friends can see where you are on the map.
+          </p>
+        </div>
       </div>
-
-      <p className="text-xs text-slate-500 mt-6 text-center">
-        Keep this page open while driving
-      </p>
     </div>
   );
 }
